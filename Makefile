@@ -6,6 +6,9 @@ start:
 stop:
 	docker compose stop
 
+down:
+	docker compose down -v
+
 clean:          ## Зупинити та видалити контейнер, образ і volume
 	docker compose down --volumes --rmi local
 	docker container prune -f
@@ -24,3 +27,13 @@ migrate:
 mm: makemigrations
 
 m: migrate
+
+seed:
+	python seed.py
+
+db_init: m seed
+
+db_check:
+	python wait_for_db.py
+
+db_reset: down start db_check db_init
