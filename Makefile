@@ -1,6 +1,6 @@
 .PHONY: start stop down
 
-start:
+run:
 	docker compose up -d
 
 stop:
@@ -36,4 +36,7 @@ db_init: m seed
 db_check:
 	python wait_for_db.py
 
-db_reset: down start db_check db_init
+db_reset: down run db_check db_init
+
+cli:
+	python main.py -h

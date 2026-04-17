@@ -5,17 +5,18 @@ from datetime import datetime, timedelta
 from conf.db import SessionLocal
 from models.models import Student, Group, Teacher, Subject, Grade
 
-fake = Faker()
+fake = Faker("uk_UA")
 session = SessionLocal()
 
-GROUP_COUNT = 5
+GROUP_COUNT = 3
 TEACHER_COUNT = 5
-SUBJECT_COUNT = 7
-STUDENT_COUNT = 35
+SUBJECT_COUNT = 6
+STUDENT_COUNT = 50
+
 
 def seed():
     # Groups
-    groups = [Group(name=f"Group-{i}") for i in range(1, GROUP_COUNT + 1)]
+    groups = [Group(name=f"Група-{i}") for i in range(1, GROUP_COUNT + 1)]
     session.add_all(groups)
 
     # Teachers
@@ -23,22 +24,27 @@ def seed():
     session.add_all(teachers)
 
     # Subjects
+    subjects_list = [
+        "Математика",
+        "Фізика",
+        "Хімія",
+        "Біологія",
+        "Історія",
+        "Географія",
+        "Програмування",
+    ]
     subjects = []
     for i in range(SUBJECT_COUNT):
         subject = Subject(
-            name=f"Subject-{i}",
-            teacher=random.choice(teachers)
+            name=random.choice(subjects_list), teacher=random.choice(teachers)
         )
         subjects.append(subject)
     session.add_all(subjects)
 
     # Students
     students = []
-    for _ in range(SUBJECT_COUNT):
-        student = Student(
-            name=fake.name(),
-            group=random.choice(groups)
-        )
+    for _ in range(STUDENT_COUNT):
+        student = Student(name=fake.name(), group=random.choice(groups))
         students.append(student)
     session.add_all(students)
 
@@ -50,8 +56,8 @@ def seed():
             grade = Grade(
                 student=student,
                 subject=random.choice(subjects),
-                grade=random.uniform(60, 100),
-                date_received=datetime.now() - timedelta(days=random.randint(1, 365))
+                grade=int(random.uniform(60, 100)),
+                date_received=datetime.now() - timedelta(days=random.randint(1, 365)),
             )
             session.add(grade)
 
