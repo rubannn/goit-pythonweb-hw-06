@@ -8,19 +8,23 @@ from models.models import Student, Group, Teacher, Subject, Grade
 fake = Faker()
 session = SessionLocal()
 
+GROUP_COUNT = 5
+TEACHER_COUNT = 5
+SUBJECT_COUNT = 7
+STUDENT_COUNT = 35
 
 def seed():
     # Groups
-    groups = [Group(name=f"Group-{i}") for i in range(1, 4)]
+    groups = [Group(name=f"Group-{i}") for i in range(1, GROUP_COUNT + 1)]
     session.add_all(groups)
 
     # Teachers
-    teachers = [Teacher(name=fake.name()) for _ in range(5)]
+    teachers = [Teacher(name=fake.name()) for _ in range(TEACHER_COUNT)]
     session.add_all(teachers)
 
     # Subjects
     subjects = []
-    for i in range(7):
+    for i in range(SUBJECT_COUNT):
         subject = Subject(
             name=f"Subject-{i}",
             teacher=random.choice(teachers)
@@ -30,7 +34,7 @@ def seed():
 
     # Students
     students = []
-    for _ in range(40):
+    for _ in range(SUBJECT_COUNT):
         student = Student(
             name=fake.name(),
             group=random.choice(groups)
